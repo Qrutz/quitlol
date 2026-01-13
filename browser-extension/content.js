@@ -12,6 +12,7 @@
     // Core terms
     'league of legends',
     'leagueoflegends',
+    'league', // Standalone "league" - matches most titles
     'lol esports',
     'riot games',
     'summoner',
@@ -160,6 +161,15 @@
     if (!text) return false;
     text = text.toLowerCase();
     const keywords = strictMode ? STRICT_KEYWORDS : LEAGUE_KEYWORDS;
+
+    // Debug: log what we're checking
+    if (DEBUG && text.length > 0) {
+      const found = keywords.filter(k => text.includes(k));
+      if (found.length > 0) {
+        console.log(`  -> Matched keywords: ${found.join(', ')}`);
+      }
+    }
+
     return keywords.some(keyword => text.includes(keyword));
   }
 
