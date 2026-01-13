@@ -4,37 +4,145 @@
 (function() {
   'use strict';
 
+  // Enable debug mode (set to false to disable logging)
+  const DEBUG = true;
+
   // Keywords to detect League content (case-insensitive)
   const LEAGUE_KEYWORDS = [
+    // Core terms
     'league of legends',
-    'league',
+    'leagueoflegends',
     'lol esports',
     'riot games',
     'summoner',
     'summoners rift',
+    'summoner\'s rift',
     'aram',
     'nexus',
     'pentakill',
-    'faker',
-    'worlds 2024',
-    'worlds 2025',
-    'worlds 2026',
+    'teamfight tactics',
+    'tft',
+    'wild rift',
+
+    // Esports leagues
     'lcs',
     'lec',
     'lck',
     'lpl',
-    't1 lol',
-    'draven',
+    'worlds 2024',
+    'worlds 2025',
+    'worlds 2026',
+    'msi',
+    'league worlds',
+    'lolesports',
+
+    // Popular champions (top 50 most searched)
     'yasuo',
     'zed',
     'ahri',
     'jinx',
-    'vi lol',
-    'ekko lol',
-    'teamfight tactics',
-    'tft',
-    'wild rift',
-    'valorant' // Also blocking Riot's other games
+    'draven',
+    'vayne',
+    'thresh',
+    'lee sin',
+    'ekko',
+    'katarina',
+    'riven',
+    'lux',
+    'akali',
+    'ezreal',
+    'kayn',
+    'jhin',
+    'sylas',
+    'irelia',
+    'teemo',
+    'master yi',
+    'darius',
+    'garen',
+    'nasus',
+    'vi',
+    'caitlyn',
+    'miss fortune',
+    'ashe',
+    'twisted fate',
+    'blitzcrank',
+    'senna',
+    'aphelios',
+    'viego',
+    'gwen',
+    'yone',
+    'seraphine',
+    'samira',
+    'vex',
+    'zeri',
+    'renata',
+    'belveth',
+    'nilah',
+    'ksante',
+    'briar',
+    'naafiri',
+    'smolder',
+
+    // Pro players & streamers (top names)
+    'faker',
+    'showmaker',
+    'chovy',
+    'caps',
+    'rekkles',
+    'doublelift',
+    'bjergsen',
+    'jensen',
+    'perkz',
+    'jankos',
+    'theshy',
+    'rookie',
+    'uzi',
+    'deft',
+    'canyon',
+    'nuguri',
+    'keria',
+    'gumayusi',
+    'zeus lol',
+    'oner lol',
+    'bwipo',
+    't1 faker',
+    'gen g',
+    'drx',
+    'jdg',
+    'edg',
+
+    // Teams
+    't1 lol',
+    'team liquid lol',
+    'cloud9 lol',
+    'fnatic lol',
+    'g2 esports lol',
+    'tsm lol',
+    '100 thieves lol',
+    'flyquest',
+
+    // Game terms
+    'baron nashor',
+    'dragon soul',
+    'rift herald',
+    'inhibitor',
+    'turret dive',
+    'gank',
+    'jungle diff',
+    'top diff',
+    'mid diff',
+    'bot diff',
+    'sup diff',
+    'ff15',
+    'surrender at 15',
+    'blue side',
+    'red side',
+    'ranked lol',
+    'challenger lol',
+    'grandmaster lol',
+    'bronze to challenger',
+    'iron to challenger',
+    'unranked to challenger'
   ];
 
   // More strict keywords that definitely indicate League content
@@ -133,6 +241,15 @@
         document.querySelector('#channel-name a')?.textContent ||
         document.querySelector('ytd-video-owner-renderer a')?.textContent ||
         '';
+
+      // Debug logging
+      if (DEBUG) {
+        console.log('🚫 QuitLoL - Checking watch page:');
+        console.log('  Video Title:', videoTitle);
+        console.log('  Channel Name:', channelName);
+        console.log('  Title contains League?', containsLeagueKeyword(videoTitle));
+        console.log('  Channel contains League?', containsLeagueKeyword(channelName));
+      }
 
       if (containsLeagueKeyword(videoTitle) || containsLeagueKeyword(channelName)) {
         // Block the video player
