@@ -32,9 +32,11 @@ A browser extension that blocks and hides all League of Legends content across t
 
 **Note:** In Firefox, temporary extensions are removed when you close the browser. For permanent installation, you'll need to package and sign the extension.
 
-## Creating Icons (Optional)
+## Icons (Optional)
 
-The extension includes an SVG icon. To create proper PNG icons:
+**The extension works perfectly without custom icons.** Chrome/Firefox will just display a default extension icon.
+
+If you want a custom icon, you can create PNG icons from the included `icons/icon.svg`:
 
 ### Online Tool (Easiest):
 1. Go to https://cloudconvert.com/svg-to-png
@@ -44,6 +46,7 @@ The extension includes an SVG icon. To create proper PNG icons:
    - 48x48 (save as `icon48.png`)
    - 128x128 (save as `icon128.png`)
 4. Place the PNG files in the `icons/` folder
+5. Update `manifest.json` to reference the icons (see Git history for the icon config)
 
 ### Using ImageMagick (Command line):
 ```bash
@@ -51,8 +54,6 @@ convert -background none -resize 16x16 icons/icon.svg icons/icon16.png
 convert -background none -resize 48x48 icons/icon.svg icons/icon48.png
 convert -background none -resize 128x128 icons/icon.svg icons/icon128.png
 ```
-
-**The extension will work without PNG icons**, but Chrome might show a warning.
 
 ## How It Works
 
