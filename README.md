@@ -16,6 +16,7 @@ This blocker implements multiple layers of protection:
 3. **File Permissions**: Makes League installation directories non-executable (or removes execute permissions)
 4. **Auto-Start**: Guardian service runs on system boot
 5. **Cleanup**: Removes existing League installations
+6. **Browser Content Blocking** (optional): Hides League content on YouTube, Twitch, Reddit, Twitter, and other websites
 
 ## Installation
 
@@ -130,6 +131,59 @@ sudo nano /etc/hosts
 - `/Library/LaunchDaemons/com.quitlol.guardian.plist` - Daemon config
 - `/usr/local/bin/quitlol_guardian.sh` - Process killer script
 - `/var/quitlol_backup/` - Backup directory
+
+## Browser Content Blocking
+
+Want to block League content on YouTube, Twitch, Reddit, and other sites? We've got you covered with two options:
+
+### Option 1: Browser Extension (Recommended)
+
+A dedicated browser extension that actively hides League content across the web.
+
+**Features:**
+- Blocks League videos on YouTube
+- Hides Twitch streams playing League
+- Filters Reddit posts from r/leagueoflegends
+- Removes League tweets on Twitter/X
+- Redirects direct visits to League sites
+- Works on Chrome, Edge, Brave, and Firefox
+
+**Installation:**
+See [browser-extension/README.md](browser-extension/README.md) for detailed instructions.
+
+**Quick start:**
+1. Open Chrome and go to `chrome://extensions/`
+2. Enable "Developer mode"
+3. Click "Load unpacked" and select the `browser-extension` folder
+4. Done!
+
+### Option 2: uBlock Origin Filters (Simpler)
+
+If you already use uBlock Origin ad blocker, you can import our filter list.
+
+**Installation:**
+1. Install [uBlock Origin](https://ublockorigin.com/)
+2. Open uBlock Origin dashboard (click icon → settings gear)
+3. Go to "Filter lists" tab
+4. Scroll to bottom, click "Import"
+5. Paste the raw GitHub URL of `ublock-filters.txt` or paste the file contents
+6. Click "Apply changes"
+
+The filter list blocks 40+ League/Riot sites and hides League content on YouTube, Twitch, Reddit, and Twitter.
+
+**File:** [ublock-filters.txt](ublock-filters.txt)
+
+### Which Should You Use?
+
+| Feature | Browser Extension | uBlock Filters |
+|---------|------------------|----------------|
+| Ease of use | Medium | Easy |
+| Effectiveness | High | Medium |
+| Performance impact | Low-Medium | Very Low |
+| Customization | High | Medium |
+| Works on mobile | No | No |
+
+**Recommendation:** Use **both** for maximum protection! The extension catches dynamic content that filters might miss.
 
 ## Philosophy
 

@@ -1,0 +1,113 @@
+! Title: QuitLoL - League of Legends Content Filter
+! Description: Blocks League of Legends content across the web
+! Homepage: https://github.com/Qrutz/quitlol
+! Expires: 7 days
+! Version: 1.0.0
+
+! ============================================
+! Block League of Legends & Riot Games Sites
+! ============================================
+
+! Main sites
+||leagueoflegends.com^
+||na.leagueoflegends.com^
+||euw.leagueoflegends.com^
+||eune.leagueoflegends.com^
+||kr.leagueoflegends.com^
+||br.leagueoflegends.com^
+||lan.leagueoflegends.com^
+||las.leagueoflegends.com^
+||oce.leagueoflegends.com^
+||jp.leagueoflegends.com^
+||riotgames.com^
+||riot.com^
+||lolesports.com^
+
+! Riot services
+||auth.riotgames.com^
+||authenticate.riotgames.com^
+||clientconfig.rpg.riotgames.com^
+||developer.riotgames.com^
+||support.riotgames.com^
+
+! CDN and update servers
+||l3cdn.riotgames.com^
+||lol.secure.dyn.riotcdn.net^
+||lolstatic-a.akamaihd.net^
+
+! ============================================
+! Block League Content on Social Media
+! ============================================
+
+! YouTube - Hide videos with League keywords in title
+youtube.com##ytd-video-renderer:has-text(/league of legends/i)
+youtube.com##ytd-video-renderer:has-text(/\blol\b/i)
+youtube.com##ytd-grid-video-renderer:has-text(/league of legends/i)
+youtube.com##ytd-grid-video-renderer:has-text(/\blol\b/i)
+youtube.com##ytd-compact-video-renderer:has-text(/league of legends/i)
+youtube.com##ytd-rich-item-renderer:has-text(/league of legends/i)
+youtube.com##ytd-video-renderer:has-text(/riot games/i)
+youtube.com##ytd-video-renderer:has-text(/LCS|LEC|LCK|LPL/i)
+
+! Twitch - Hide League streams
+twitch.tv##article:has-text(/league of legends/i)
+twitch.tv##div[class*="Card"]:has-text(/league of legends/i)
+twitch.tv##a[href*="/directory/game/League"]:upward(3)
+
+! Reddit - Block r/leagueoflegends
+reddit.com##shreddit-post:has-text(/league of legends/i)
+reddit.com##div[data-testid="post-container"]:has-text(/league of legends/i)
+||reddit.com/r/leagueoflegends^
+
+! Twitter/X - Hide League tweets
+twitter.com##article:has-text(/league of legends/i)
+twitter.com##article:has-text(/\blol\b.*esports/i)
+x.com##article:has-text(/league of legends/i)
+
+! ============================================
+! Block Embedded Content
+! ============================================
+
+! Block League-related iframes
+||youtube.com/embed/*league*^$frame
+||twitch.tv/embed/*league*^$frame
+
+! ============================================
+! Additional Riot Games Products
+! ============================================
+
+! Valorant (optional - comment out if you play Valorant)
+||playvalorant.com^
+
+! Teamfight Tactics (optional)
+||teamfighttactics.leagueoflegends.com^
+
+! Wild Rift (optional)
+||wildrift.leagueoflegends.com^
+
+! ============================================
+! Block Common League Fansites
+! ============================================
+
+||op.gg^
+||u.gg^
+||mobafire.com^
+||lolking.net^
+||probuilds.net^
+||champion.gg^
+||leagueofgraphs.com^
+
+! ============================================
+! Notes
+! ============================================
+
+! To use this filter list:
+! 1. Install uBlock Origin (Chrome/Firefox/Edge)
+! 2. Open uBlock Origin dashboard
+! 3. Go to "Filter lists" tab
+! 4. Scroll to bottom and click "Import"
+! 5. Paste this entire file or the URL to this file
+! 6. Click "Apply changes"
+!
+! Alternative: Copy URL of this file from GitHub raw view
+! and add it as a custom filter list URL

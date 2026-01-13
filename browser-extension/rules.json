@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://www.google.com/search?q=how+to+quit+gaming+addiction"
+      }
+    },
+    "condition": {
+      "urlFilter": "*://leagueoflegends.com/*",
+      "resourceTypes": ["main_frame"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://www.google.com/search?q=how+to+quit+gaming+addiction"
+      }
+    },
+    "condition": {
+      "urlFilter": "*://na.leagueoflegends.com/*",
+      "resourceTypes": ["main_frame"]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://www.google.com/search?q=how+to+quit+gaming+addiction"
+      }
+    },
+    "condition": {
+      "urlFilter": "*://reddit.com/r/leagueoflegends*",
+      "resourceTypes": ["main_frame"]
+    }
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://www.google.com/search?q=how+to+quit+gaming+addiction"
+      }
+    },
+    "condition": {
+      "urlFilter": "*://lolesports.com/*",
+      "resourceTypes": ["main_frame"]
+    }
+  },
+  {
+    "id": 5,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "url": "https://www.google.com/search?q=how+to+quit+gaming+addiction"
+      }
+    },
+    "condition": {
+      "urlFilter": "*://riotgames.com/*",
+      "resourceTypes": ["main_frame"]
+    }
+  }
+]
