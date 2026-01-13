@@ -72,37 +72,118 @@
 
   // YouTube-specific blocking
   function blockYouTubeContent() {
-    // Block video thumbnails
-    const videoElements = document.querySelectorAll('ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-rich-item-renderer');
+    // Block ALL types of video thumbnails (home, search, sidebar, recommendations)
+    const videoElements = document.querySelectorAll(`
+      ytd-video-renderer,
+      ytd-grid-video-renderer,
+      ytd-compact-video-renderer,
+      ytd-rich-item-renderer,
+      ytd-playlist-video-renderer,
+      ytd-movie-renderer,
+      ytd-reel-item-renderer,
+      ytd-playlist-panel-video-renderer,
+      ytm-compact-video-renderer,
+      ytm-video-with-context-renderer
+    `.trim().split('\n').map(s => s.trim()).join(', '));
 
     videoElements.forEach(video => {
       if (video.hasAttribute('data-quitlol-checked')) return;
       video.setAttribute('data-quitlol-checked', 'true');
 
-      const titleElement = video.querySelector('#video-title, #video-title-link');
-      const channelElement = video.querySelector('#channel-name, .ytd-channel-name');
+      // Get title from multiple possible locations
+      const titleElement = video.querySelector('#video-title, #video-title-link, a#video-title, .title, h3, h4');
+      const channelElement = video.querySelector('#channel-name, .ytd-channel-name, #text, ytd-channel-name a, yt-formatted-string.ytd-channel-name');
 
-      const title = titleElement?.textContent || titleElement?.getAttribute('title') || '';
+      const title = titleElement?.textContent || titleElement?.getAttribute('title') || titleElement?.getAttribute('aria-label') || '';
       const channel = channelElement?.textContent || '';
+      const href = titleElement?.href || '';
 
-      if (containsLeagueKeyword(title) || containsLeagueKeyword(channel)) {
+      if (containsLeagueKeyword(title) || containsLeagueKeyword(channel) || containsLeagueKeyword(href)) {
         video.style.display = 'none';
         blockedCount++;
       }
     });
 
-    // Block the current video if watching
-    const videoTitle = document.querySelector('h1.ytd-watch-metadata yt-formatted-string, h1.title');
-    const channelName = document.querySelector('ytd-channel-name a, #channel-name a');
+    // Block Shorts
+    const shortsElements = document.querySelectorAll('ytd-reel-item-renderer, ytd-short, ytm-reel-item-renderer');
+    shortsElements.forEach(short => {
+      if (short.hasAttribute('data-quitlol-checked')) return;
+      short.setAttribute('data-quitlol-checked', 'true');
 
-    if (videoTitle && containsLeagueKeyword(videoTitle.textContent)) {
-      const player = document.querySelector('#movie_player, .html5-video-player');
-      if (player && !player.hasAttribute('data-quitlol-blocked')) {
-        player.setAttribute('data-quitlol-blocked', 'true');
-        player.style.display = 'none';
-        const overlay = createBlockedOverlay('This video contains League of Legends content');
-        player.parentElement.insertBefore(overlay, player);
-        document.title = '🚫 Blocked - QuitLoL';
+      const text = short.textContent || '';
+      if (containsLeagueKeyword(text)) {
+        short.style.display = 'none';
+        blockedCount++;
+      }
+    });
+
+    // Block the current video if watching (AGGRESSIVE)
+    if (window.location.pathname.includes('/watch')) {
+      // Multiple ways to get the video title
+      const videoTitle =
+        document.querySelector('h1.ytd-watch-metadata yt-formatted-string')?.textContent ||
+        document.querySelector('h1.title yt-formatted-string')?.textContent ||
+        document.querySelector('ytd-watch-metadata h1')?.textContent ||
+        document.querySelector('.title.ytd-video-primary-info-renderer')?.textContent ||
+        document.title ||
+        '';
+
+      const channelName =
+        document.querySelector('ytd-channel-name a')?.textContent ||
+        document.querySelector('#channel-name a')?.textContent ||
+        document.querySelector('ytd-video-owner-renderer a')?.textContent ||
+        '';
+
+      if (containsLeagueKeyword(videoTitle) || containsLeagueKeyword(channelName)) {
+        // Block the video player
+        const player = document.querySelector('#movie_player, .html5-video-player, video');
+        const primaryCol = document.querySelector('#primary');
+
+        if (player && !player.hasAttribute('data-quitlol-blocked')) {
+          player.setAttribute('data-quitlol-blocked', 'true');
+
+          // Hide video player
+          if (player.tagName === 'VIDEO') {
+            player.pause();
+            player.src = '';
+          }
+          player.style.display = 'none';
+
+          // Show blocked overlay
+          const overlay = createBlockedOverlay('This video contains League of Legends content');
+
+          // Insert overlay where the player is
+          const container = player.closest('#player-container, #player, .html5-video-container') || player.parentElement;
+          if (container) {
+            container.style.position = 'relative';
+            container.insertBefore(overlay, container.firstChild);
+          }
+
+          document.title = '🚫 Blocked - QuitLoL';
+        }
+
+        // Also hide the entire primary column as backup
+        if (primaryCol && !primaryCol.hasAttribute('data-quitlol-blocked')) {
+          primaryCol.setAttribute('data-quitlol-blocked', 'true');
+          primaryCol.style.opacity = '0.1';
+          primaryCol.style.pointerEvents = 'none';
+        }
+      }
+    }
+
+    // Block on channel pages if it's a League channel
+    if (window.location.pathname.includes('/channel') || window.location.pathname.includes('/@')) {
+      const channelName = document.querySelector('ytd-channel-name yt-formatted-string, #channel-name')?.textContent || '';
+      const channelTitle = document.querySelector('#channel-header ytd-channel-name')?.textContent || document.title || '';
+
+      if (containsLeagueKeyword(channelName) || containsLeagueKeyword(channelTitle)) {
+        const main = document.querySelector('ytd-page-manager, #page-manager');
+        if (main && !main.hasAttribute('data-quitlol-blocked')) {
+          main.setAttribute('data-quitlol-blocked', 'true');
+          main.innerHTML = '';
+          main.appendChild(createBlockedOverlay('This channel posts League of Legends content'));
+          document.title = '🚫 Blocked - QuitLoL';
+        }
       }
     }
   }
