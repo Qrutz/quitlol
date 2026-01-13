@@ -181,18 +181,9 @@
   // YouTube-specific blocking
   function blockYouTubeContent() {
     // Block ALL types of video thumbnails (home, search, sidebar, recommendations)
-    const videoElements = document.querySelectorAll(`
-      ytd-video-renderer,
-      ytd-grid-video-renderer,
-      ytd-compact-video-renderer,
-      ytd-rich-item-renderer,
-      ytd-playlist-video-renderer,
-      ytd-movie-renderer,
-      ytd-reel-item-renderer,
-      ytd-playlist-panel-video-renderer,
-      ytm-compact-video-renderer,
-      ytm-video-with-context-renderer
-    `.trim().split('\n').map(s => s.trim()).join(', '));
+    const videoElements = document.querySelectorAll(
+      'ytd-video-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer, ytd-rich-item-renderer, ytd-playlist-video-renderer, ytd-movie-renderer, ytd-reel-item-renderer, ytd-playlist-panel-video-renderer, ytm-compact-video-renderer, ytm-video-with-context-renderer'
+    );
 
     videoElements.forEach(video => {
       if (video.hasAttribute('data-quitlol-checked')) return;
