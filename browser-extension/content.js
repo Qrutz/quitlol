@@ -234,8 +234,9 @@
         '';
 
       // Debug logging
-      if (DEBUG) {
-        console.log('🚫 QuitLoL - Checking watch page:');
+      if (DEBUG && (videoTitle || channelName)) {
+        // Only log when we actually find content (to avoid spam)
+        console.log('🚫 QuitLoL - Found watch page content:');
         console.log('  Video Title:', videoTitle);
         console.log('  Channel Name:', channelName);
         console.log('  Title contains League?', containsLeagueKeyword(videoTitle));
@@ -243,6 +244,10 @@
       }
 
       if (containsLeagueKeyword(videoTitle) || containsLeagueKeyword(channelName)) {
+        if (DEBUG) {
+          console.log('🚫 QuitLoL: BLOCKING YouTube video - League content detected!');
+        }
+
         // Block the video player
         const player = document.querySelector('#movie_player, .html5-video-player, video');
         const primaryCol = document.querySelector('#primary');
@@ -416,29 +421,51 @@
     blockGenericContent();
   }
 
-  // Run blocker on page load
-  blockContent();
+  // Wait for page to be ready, then run blocker
+  function init() {
+    if (DEBUG) {
+      console.log('🚫 QuitLoL: Extension loaded');
+    }
 
-  // Set up mutation observer to catch dynamically loaded content
-  const observer = new MutationObserver((mutations) => {
+    // Run initial block
     blockContent();
-  });
 
-  // Start observing
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+    // Set up mutation observer if document.body exists
+    if (document.body) {
+      const observer = new MutationObserver((mutations) => {
+        blockContent();
+      });
 
-  // Run periodically as backup
-  setInterval(blockContent, 2000);
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
 
-  // Log blocked content count
-  if (blockedCount > 0) {
-    console.log(`🚫 QuitLoL: Blocked ${blockedCount} League of Legends items`);
+      if (DEBUG) {
+        console.log('🚫 QuitLoL: MutationObserver started');
+      }
+    } else {
+      if (DEBUG) {
+        console.log('🚫 QuitLoL: document.body not ready, waiting...');
+      }
+      // If body doesn't exist yet, wait for it
+      setTimeout(init, 100);
+      return;
+    }
+
+    // Run periodically as backup (especially important for YouTube SPA navigation)
+    setInterval(blockContent, 1000);
+
+    // Log blocked content count
+    if (blockedCount > 0) {
+      console.log(`🚫 QuitLoL: Blocked ${blockedCount} League of Legends items`);
+    }
   }
 
-  // Prevent circumvention by blocking developer tools from disabling the extension
-  // (Users can still disable via extension settings, but adds friction)
-  Object.freeze(observer);
+  // Start when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
